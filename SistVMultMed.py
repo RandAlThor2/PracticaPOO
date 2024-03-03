@@ -48,6 +48,19 @@ class Mascota:
         self.__fecha_ingreso=f
     def asignarLista_Medicamentos(self,n):
         self.__lista_medicamentos = n 
+        
+    #Creé una función para verificar ciertos parámetros de la fecha, para así intentar atrapar errores.
+    def verificarFecha(self, fecha):
+        lista=fecha.split("/")
+        if 1 < int(lista[0]) > 31:
+            return False
+        elif 1 < int(lista[1]) > 12:
+            return False
+        elif len(lista[2]) != 4:
+            return False
+        else:
+            return True
+
     
 class sistemaV:
     #Se crean dos diccionarios, uno para felinos y otro para caninos, en los cuales la clave es la historia y el valor es el objeto mascota.
@@ -121,7 +134,8 @@ def main():
                 nombre=input("Ingrese el nombre de la mascota: ")
                 tipo=input("Ingrese el tipo de mascota (felino o canino): ")
                 peso=int(input("Ingrese el peso de la mascota: "))
-                fecha=input("Ingrese la fecha de ingreso (dia/mes/año): ")
+                #Realicé un pequeño cambio en la sintaxis de como se pide la fecha para poderla verificar teniendo datos más fáciles de comparar.
+                fecha=input("Ingrese la fecha de ingreso (dd/mm/aaaa): ")                
                 nm=int(input("Ingrese cantidad de medicamentos: "))
                 lista_med=[]
 
@@ -152,6 +166,16 @@ def main():
                 mas.asignarPeso(peso)
                 mas.asignarTipo(tipo)
                 mas.asignarFecha(fecha)
+                #Se usa un while para que si la función retorna True, se asigne el valor de la fecha
+                #pero si retorna False, se siga preguntando y llamando a la función
+                while True:
+                    if mas.verificarFecha(fecha) == True:
+                        break
+                    else:
+                        print("Hay un error en el ingreso de la fecha, vuelva a escribirla.")
+                        fecha=input("Ingrese la fecha de ingreso (dd/mm/aaaa): ")
+                        mas.verificarFecha(fecha)
+
                 mas.asignarLista_Medicamentos(lista_med)
                 servicio_hospitalario.ingresarMascota(mas)
 
