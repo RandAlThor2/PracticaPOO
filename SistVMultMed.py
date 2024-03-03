@@ -50,29 +50,36 @@ class Mascota:
         self.__lista_medicamentos = n 
     
 class sistemaV:
+    #Se crean dos diccionarios, uno para felinos y otro para caninos, en los cuales la clave es la historia y el valor es el objeto mascota.
     def __init__(self):
-        self.__lista_mascotas = []
+        self.__lista_mascotasCaninos={}
+        self.__lista_mascotasFelinos={}
     
     def verificarExiste(self,historia):
-        for m in self.__lista_mascotas:
-            if historia == m.verHistoria():
-                return True
+        if historia in self.__lista_mascotasFelinos or historia in self.__lista_mascotasCaninos:
+            return True
         #solo luego de haber recorrido todo el ciclo se retorna False
         return False
         
     def verNumeroMascotas(self):
-        return len(self.__lista_mascotas) 
+        return len(self.__lista_mascotasCaninos) + len(self.__lista_mascotasFelinos) 
     
     def ingresarMascota(self,mascota):
-        self.__lista_mascotas.append(mascota) 
+        #Dependiendo del tipo de mascota, se agrega al diccionario correspondiente, poniendo como clave su Historia
+        if mascota.verTipo()== "Canino":
+            self.__lista_mascotasCaninos[mascota.verHistoria()] = mascota
+        else:
+            self.__lista_mascotasFelinos[mascota.verHistoria()] = mascota
    
 
     def verFechaIngreso(self,historia):
-        #busco la mascota y devuelvo el atributo solicitado
-        for masc in self.__lista_mascotas:
-            if historia == masc.verHistoria():
-                return masc.verFecha() 
-        return None
+        #Se busca si la historia existe en alguno de los dos diccionarios, y se retorna la fecha correspondiente
+        if historia in self.__lista_mascotasCaninos:
+            return self.__lista_mascotasCaninos[historia].verFecha()
+        elif historia in self.__lista_mascotasFelinos:
+            return self.__lista_mascotasFelinos[historia].verFecha() 
+        else:
+            return None
 
     def verMedicamento(self,historia):
         #busco la mascota y devuelvo el atributo solicitado
@@ -82,10 +89,14 @@ class sistemaV:
         return None
     
     def eliminarMascota(self, historia):
-        for masc in self.__lista_mascotas:
-            if historia == masc.verHistoria():
-                self.__lista_mascotas.remove(masc)  #opcion con el pop
-                return True  #eliminado con exito
+        #Se realiza el cambio para que busque en los diccionarios correspondientes si existe la historia en forma de llave
+        #En ese caso se elimina elemento del diccionario
+        if historia in self.__lista_mascotasCaninos:
+            del(self.__lista_mascotasCaninos[historia])  
+            return True  #eliminado con exito
+        elif historia in self.__lista_mascotasFelinos:
+            del(self.__lista_mascotasFelinos[historia])
+            return True 
         return False 
 
 def main():
