@@ -46,6 +46,15 @@ class Sistema:
             if c == p.verCedula():
                 return p #si encuentro el paciente lo retorno
             
+    #Se crea una funcion para obtener los datos del paciente mediante una parte del nombre
+    def verDatosPaciente_Nombre(self,nombre):
+        encontrados=[]
+        for paciente in self.__lista_pacientes:
+            if nombre in paciente.verNombre():
+                encontrados.append(paciente)
+        return encontrados
+
+
     def verNumeroPacientes(self):
         print("En el sistema hay: " + str(len(self.__lista_pacientes)) + " pacientes") 
 
@@ -54,7 +63,7 @@ def main():
     #probemos lo que llevamos programado
     while True:
         #TAREA HACER EL MENU
-        opcion = int(input("\nIngrese \n0 para salir, \n1 para ingresar nuevo paciente, \n2 ver Paciente\n\t--> ")) 
+        opcion = int(input("\nIngrese \n0 para salir \n1 para ingresar nuevo paciente \n2 ver Paciente (cedula) \n3 ver Paciente (nombre)\n \t--> ")) 
         
         if opcion == 1:
             #ingreso pacientes
@@ -90,7 +99,20 @@ def main():
                 print("Genero: " + p.verGenero()) 
                 print("Servicio: " + p.verServicio()) 
             else:
-                print("No existe un paciente con esa cedula") 
+                print("No existe un paciente con esa cedula")
+
+
+        #Se crea una opción que permita entregar la información de todos los pacientes
+        #que tengan un nombre en el cual aparezcan los caracteres que se ingresaron 
+        elif opcion == 3:
+            n = input("Ingrese el nombre a buscar: ")
+            pacientes=sis.verDatosPaciente_Nombre(n)
+            for paciente in pacientes:
+                print("Nombre: " + paciente.verNombre()) 
+                print("Cedula: " + str(paciente.verCedula())) 
+                print("Genero: " + paciente.verGenero()) 
+                print("Servicio: " + paciente.verServicio() + "/n")
+
         elif opcion !=0:
             continue 
         else:
