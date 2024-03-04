@@ -1,20 +1,24 @@
 class Medicamento:
+    #constructor de la clase Medicamento
     def __init__(self):
         self.__nombre = "" 
         self.__dosis = 0 
     
+    #Getters de la clase Medicamento
     def verNombre(self):
         return self.__nombre 
     def verDosis(self):
         return self.__dosis 
     
+    #Setters de la clase Medicamento
     def asignarNombre(self,med):
         self.__nombre = med 
     def asignarDosis(self,med):
         self.__dosis = med 
         
 class Mascota:
-    
+
+    #Constructor de la clase Mascota
     def __init__(self):
         self.__nombre= " "
         self.__historia=0
@@ -22,7 +26,8 @@ class Mascota:
         self.__peso=" "
         self.__fecha_ingreso=" "
         self.__lista_medicamentos=[]
-        
+
+    #Getters de la clase Mascota    
     def verNombre(self):
         return self.__nombre
     def verHistoria(self):
@@ -35,7 +40,8 @@ class Mascota:
         return self.__fecha_ingreso
     def verLista_Medicamentos(self):
         return self.__lista_medicamentos 
-            
+
+    #Setters de la clase Mascota        
     def asignarNombre(self,n):
         self.__nombre=n
     def asignarHistoria(self,nh):
@@ -64,6 +70,7 @@ class Mascota:
     
 class sistemaV:
     #Se crean dos diccionarios, uno para felinos y otro para caninos, en los cuales la clave es la historia y el valor es el objeto mascota.
+    #Constructor de la clase sistemaV
     def __init__(self):
         self.__lista_mascotasCaninos={}
         self.__lista_mascotasFelinos={}
@@ -85,6 +92,7 @@ class sistemaV:
             self.__lista_mascotasFelinos[mascota.verHistoria()] = mascota
    
 
+    #Getters de la clase sistemaV
     def verFechaIngreso(self,historia):
         #Se busca si la historia existe en alguno de los dos diccionarios, y se retorna la fecha correspondiente
         if historia in self.__lista_mascotasCaninos:
@@ -96,11 +104,14 @@ class sistemaV:
 
     def verMedicamento(self,historia):
         #busco la mascota y devuelvo el atributo solicitado
-        for masc in self.__lista_mascotas:
-            if historia == masc.verHistoria():
-                return masc.verLista_Medicamentos() 
+        if historia in self.__lista_mascotasCaninos:
+            return self.__lista_mascotasCaninos[historia].verLista_Medicamentos() 
+            
+        elif historia in self.__lista_mascotasFelinos:
+            return self.__lista_mascotasFelinos[historia].verLista_Medicamentos()
         return None
     
+        #Deleters de la clase sistemaV
     def eliminarMascota(self, historia):
         #Se realiza el cambio para que busque en los diccionarios correspondientes si existe la historia en forma de llave
         #En ese caso se elimina elemento del diccionario
@@ -109,8 +120,25 @@ class sistemaV:
             return True  #eliminado con exito
         elif historia in self.__lista_mascotasFelinos:
             del(self.__lista_mascotasFelinos[historia])
-            return True 
+            return True #eliminado con exito
         return False 
+
+    #Se crea la función para eliminar el medicamento, la cual da una lista modificada
+
+    def eliminarMedicamento(self, historia,medicamento):
+        if historia in self.__lista_mascotasCaninos:
+            for med in self.__lista_mascotasCaninos[historia].verLista_Medicamentos():
+                if medicamento == med.verNombre():
+                    self.__lista_mascotasCaninos[historia].verLista_Medicamentos().remove(med)
+                    return True
+
+        elif historia in self.__lista_mascotasFelinos:
+            for med in self.__lista_mascotasFelinos[historia].verLista_Medicamentos():
+                if medicamento == med.verNombre():
+                    self.__lista_mascotasFelinos[historia].verLista_Medicamentos().remove(med)
+                    return True
+        
+            
 
 def main():
     servicio_hospitalario = sistemaV()
@@ -121,8 +149,9 @@ def main():
                        \n2- Ver fecha de ingreso 
                        \n3- Ver número de mascotas en el servicio 
                        \n4- Ver medicamentos que se están administrando
-                       \n5- Eliminar mascota 
-                       \n6- Salir 
+                       \n5- Eliminar mascota
+                       \n6- Eliminar medicamento 
+                       \n7- Salir 
                        \nUsted ingresó la opción: ''' ))
         if menu==1: # Ingresar una mascota 
             if servicio_hospitalario.verNumeroMascotas() >= 10:
@@ -214,7 +243,18 @@ def main():
             else:
                 print("No se ha podido eliminar la mascota")
         
+        #Se da la opción de eliminar un medicamento, para lo cual se llama a una función que realiza esta acción
+        #tomando como parámetros la historia clínica y el medicamento que se desea eliminar
         elif menu==6:
+            q = int(input("Ingrese la historia clínica de la mascota: "))
+            m = input("Ingrese el nombre del medicamento que desea eliminar: ")
+            resultado = servicio_hospitalario.eliminarMedicamento(q,m)
+            if resultado:
+                print("Se ha eliminado el medicamento")
+            else:
+                print("No se ha podido eliminar el medicamento")
+
+        elif menu==7:
             print("Usted ha salido del sistema de servicio de hospitalización...")
             break
         
